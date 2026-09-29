@@ -8,7 +8,7 @@ RUN mvn dependency:go-offline -B
 
 COPY src ./src
 
-RUN mvn clean packege -DskipTests
+RUN mvn clean package -DskipTests
 
 #=========== Second Stage Runtime
 

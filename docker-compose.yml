@@ -1,0 +1,25 @@
+services:
+
+  limitation-db:
+    container_name: limitation-db
+    image: postgres:latest
+    restart: always
+    networks:
+      - credit-network
+    environment:
+      - POSTGRES_DB=limitation-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5435:5432"
+
+  limitation-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8080"
+
+networks:
+  credit-network:
+    driver: bridge
