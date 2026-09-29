@@ -1,25 +1,25 @@
 services:
-
   limitation-db:
-    container_name: limitation-db
     image: postgres:latest
-    restart: always
-    networks:
-      - credit-network
-    environment:
-      - POSTGRES_DB=limitation-db
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+    container_name: limitation-db
+    restart: unless-stopped
+
     ports:
       - "5435:5432"
 
-  limitation-api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8083:8080"
+    environment:
+      POSTGRES_DB: limitation-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
 
-networks:
-  credit-network:
-    driver: bridge
+    volumes:
+      - limitation-db-data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d limitation-db"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  limitation-db-data:
